@@ -3,9 +3,9 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
 const config = require('config');
 const User = require('../../models/User')
+const passwordResetLink = require('../../utils/nodemailer')
 
 
 //Register User
@@ -51,7 +51,7 @@ router.post('/', [
         jwt.sign(
             payload,
             config.get('jwtSecret'),
-            { expiresIn: 3600 },
+            { expiresIn: "1h" },
             (err, token) => {  //callback function that returns token and checks for errors
                 if (err) throw err;
                 res.json({ token })
@@ -71,23 +71,63 @@ router.get('/passwordreset', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-
+    
     const { email } = req.body
-
+    console.log(email)
     try {
         let user = await User.findOne({ email })
 
         if (!user) {
             return res.status(400).json({ errors: [{ msg: 'User credentials not found' }] })
         }
-        
-        let secret = `${user.password}-${user.id}`
 
-        res.json(secret);
+        payload = {
+            id: user._id,
+            email
+        }
+        console.log(user);
+        let secret = `${user.password}`
+
+        jwt.sign(
+            payload,
+            secret,
+            { expiresIn: "5m" },
+            (err, token) => {  //callback function that returns token and checks for errors
+                if (err) throw err;
+               
+            
+               let resetPayload = {
+                   sendToEmail: 'timnagorski@hotmail.com',
+                   token,
+                   id: user._id
+               }
+
+               passwordResetLink(resetPayload)
+               res.json({ token })    
+            }
+        )
+        console.log('end')
     } catch(err) {
         console.error(err)
         res.status(500).send('Server Error')
     }
 })
+
+router.get('/resetpassword/:id/:token', async (req, res) => {
+  
+    try {
+        
+        let user = await User.findById(req.params.id)
+        console.log(user)
+    let check = jwt.decode(req.params.token, user.password)
+
+
+     res.send({ check })
+        
+    } catch (error) {
+        console.error(error)
+    }
+    
+} )
 
 module.exports = router
