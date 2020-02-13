@@ -1,7 +1,7 @@
 {
-  "name": "wegmania",
+  "name": "nerfman",
   "version": "1.0.0",
-  "description": "Social App for comparing and rating wegman's products",
+  "description": "Social App for comparing and rating nerf guns",
   "main": "index.js",
   "scripts": {
     "start": "node server",
@@ -13,7 +13,7 @@
   },
   "keywords": [
     "Social",
-    "Wegmans"
+    "nerf"
   ],
   "author": "Tim Nagorski",
   "license": "ISC",
