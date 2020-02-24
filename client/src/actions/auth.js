@@ -66,7 +66,7 @@ export const login = (email, password) => async dispatch => {
     try {
         
         const res = await axios.post('/api/auth', {email, password})
-
+        axios.defaults.headers.common['x-auth-token'] = res.data.token
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
@@ -90,5 +90,9 @@ export const login = (email, password) => async dispatch => {
 //////////////Log out
 
 export const logout = () => dispatch => {
+    console.log('before', axios.defaults.headers.common['x-auth-token'])
+    delete axios.defaults.headers.common['x-auth-token']
+    console.log('after', axios.defaults.headers.common['x-auth-token'])
+    
     dispatch({ type: LOG_OUT })
 }

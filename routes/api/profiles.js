@@ -12,9 +12,10 @@ const User = require('../../models/User')
 
 //Get public router to get all profiles
 router.get('/me', auth, async (req, res) => {
+    console.log(req.user)
     try {
 
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'date']) // the second proptery to populate is an array of the things we want to bring from user
+        const profile = await Profile.findOne({ user: req.user }).populate('user', ['name', 'date']) // the second proptery to populate is an array of the things we want to bring from user
 
         if (!profile) {
             return res.status(400).json({ msg: 'There is no profile for this user' })
@@ -36,7 +37,7 @@ router.post('/', auth, async (req, res) => {
 
     const profileFields = {};
 
-    profileFields.user = req.user.id
+    profileFields.user = req.user
     if (company) profileFields.company = company
     if (website) profileFields.website = website
     if (location) profileFields.location = location
@@ -56,6 +57,9 @@ router.post('/', auth, async (req, res) => {
     if (facebook) profileFields.social.facebook = facebook
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
+
+    console.log(profileFields)
+
     try {
 
         let profile = await Profile.findOne({ user: req.user.id })
