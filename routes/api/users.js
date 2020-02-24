@@ -14,11 +14,12 @@ router.post('/', [
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Password must be six or more characters').isLength({ min: 6 })
 ], async (req, res) => {
+    
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
-
+    
     const { name, email, password } = req.body
 
     try {
@@ -73,7 +74,7 @@ router.get('/passwordreset', [
     }
     
     const { email } = req.body
-    console.log(email)
+   
     try {
         let user = await User.findOne({ email })
 
@@ -85,7 +86,7 @@ router.get('/passwordreset', [
             id: user._id,
             email
         }
-        console.log(user);
+       
         let secret = `${user.password}`
 
         jwt.sign(
@@ -106,7 +107,7 @@ router.get('/passwordreset', [
                res.json({ token })    
             }
         )
-        console.log('end')
+       
     } catch(err) {
         console.error(err)
         res.status(500).send('Server Error')
@@ -118,7 +119,7 @@ router.get('/resetpassword/:id/:token', async (req, res) => {
     try {
         
         let user = await User.findById(req.params.id)
-        console.log(user)
+        
     let check = jwt.decode(req.params.token, user.password)
 
 

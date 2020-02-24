@@ -13,6 +13,7 @@ export default (state = initialState, action) => {
 
     switch(type) {
         case USER_LOADED:
+            
             return {
                 ...state,
                 isAuthenticated: true,
@@ -37,7 +38,8 @@ export default (state = initialState, action) => {
                ...state,
                token: null,
                isAuthenticated: false,
-               loading: false
+               loading: false,
+               user: null  ///I added this line; I don't see the benefit of keeping user info in state after logout
            }
         
         default:
