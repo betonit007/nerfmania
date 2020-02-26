@@ -58,7 +58,6 @@ router.post('/', auth, async (req, res) => {
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
 
-    console.log(req.user)
 
     try {
 
@@ -150,7 +149,7 @@ router.put('/experience', auth, async (req, res) => {
 
 
     try {
-        const profile = await Profile.findOne({ user: req.user.id });
+        const profile = await Profile.findOne({ user: req.user });
         if (!profile) {
             return res.send({ msg: 'No Profile found, cannot update ' })
         }
@@ -176,7 +175,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 
     try {
 
-        const profile = await Profile.findOne({ user: req.user.id });
+        const profile = await Profile.findOne({ user: req.user });
 
         //Get the index you want to remove
         const removeIndex = profile.experience
@@ -184,6 +183,69 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
             .indexOf(req.params.exp_id);
 
         profile.experience.splice(removeIndex, 1);
+
+        await profile.save();
+
+        res.send(profile);
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+})
+
+//Private put route to update experience
+router.put('/education', auth, async (req, res) => {
+
+    const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+    
+    const newExp = {
+        school,
+        degree,
+        fieldofstudy,
+        from,
+        to,
+        current,
+        description
+    }
+
+
+
+    try {
+        const profile = await Profile.findOne({ user: req.user });
+        if (!profile) {
+            return res.send({ msg: 'No Profile found, cannot update ' })
+        }
+
+        if (profile.education) {
+            profile.education.unshift(newExp)
+        }
+
+        else profile.education = [newExp];
+
+        await profile.save();
+
+        res.json(profile);
+
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server Error')
+    }
+})
+
+//Delete an experience from profile
+router.delete('/education/:exp_id', auth, async (req, res) => {
+
+    try {
+
+        const profile = await Profile.findOne({ user: req.user });
+
+        //Get the index you want to remove
+        const removeIndex = profile.education
+            .map(item => item.id)
+            .indexOf(req.params.exp_id);
+
+        profile.education.splice(removeIndex, 1);
 
         await profile.save();
 
