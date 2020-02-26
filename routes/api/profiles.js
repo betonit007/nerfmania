@@ -12,7 +12,7 @@ const User = require('../../models/User')
 
 //Get public router to get all profiles
 router.get('/me', auth, async (req, res) => {
-    console.log(req.user)
+ 
     try {
 
         const profile = await Profile.findOne({ user: req.user }).populate('user', ['name', 'date']) // the second proptery to populate is an array of the things we want to bring from user
@@ -33,7 +33,7 @@ router.get('/me', auth, async (req, res) => {
 
 router.post('/', auth, async (req, res) => {
 
-    const { company, website, location, bio, status, githubusername, skills, youtube, facebook, twitter, instagram, linkedin } = req.body
+    const { company, website, location, bio, status, thingiverse, skills, youtube, facebook, twitter, instagram, linkedin } = req.body
 
     const profileFields = {};
 
@@ -43,7 +43,7 @@ router.post('/', auth, async (req, res) => {
     if (location) profileFields.location = location
     if (bio) profileFields.bio = bio
     if (status) profileFields.status = status
-    if (githubusername) profileFields.githubusername = githubusername
+    if (thingiverse) profileFields.thingiverse = thingiverse
     if (skills) profileFields.skills = skills.split(',').map(skill => skill.trim())
     if (youtube) profileFields.youtube = youtube
     if (facebook) profileFields.facebook = facebook
@@ -58,15 +58,15 @@ router.post('/', auth, async (req, res) => {
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
 
-    console.log(profileFields)
+    console.log(req.user)
 
     try {
 
-        let profile = await Profile.findOne({ user: req.user.id })
+        let profile = await Profile.findOne({ user: req.user })
 
         if (profile) { // if profile found, update it.
             profile = await Profile.findByIdAndUpdate(
-                { user: req.user.id },
+                req.user,
                 { $set: profileFields },
                 { new: true }
             )

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { setAlert } from './alert'
 import setAuthToken from '../utils/setAuthToken'
-import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOG_OUT } from '../actions/types'
+import { REGISTER_SUCCESS, REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOG_OUT, CLEAR_PROFILE } from '../actions/types'
 
 //LOAD USER
 export const loadUser = () => async dispatch => {
@@ -12,7 +12,7 @@ export const loadUser = () => async dispatch => {
     
     try {
         const res = await axios.get('/api/auth');
-        console.log(res.data)
+ 
         dispatch({
             type: USER_LOADED,
             payload: res.data
@@ -90,9 +90,10 @@ export const login = (email, password) => async dispatch => {
 //////////////Log out
 
 export const logout = () => dispatch => {
-    console.log('before', axios.defaults.headers.common['x-auth-token'])
+   
     delete axios.defaults.headers.common['x-auth-token']
-    console.log('after', axios.defaults.headers.common['x-auth-token'])
+ 
     
     dispatch({ type: LOG_OUT })
+    dispatch({ type: CLEAR_PROFILE })
 }
