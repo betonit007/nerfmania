@@ -8,6 +8,7 @@ const auth = require('../../middleware/auth')
 
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
+const Post = require('../../models/Post')
 
 
 //Get public router to get all profiles
@@ -119,10 +120,12 @@ router.get('/user/:user_id', async (req, res) => {
 //Delete profile, user & posts
 router.delete('/', auth, async (req, res) => {
     try {
+        //Remove users post
+        await Post.deleteMany({ user: req.user })
         //Remove profile
-        await Profile.findOneAndRemove({ user: req.user.id })
+        await Profile.findOneAndRemove({ user: req.user })
         // Remove user
-        await User.findOneAndRemove({ _id: req.user.id })
+        await User.findOneAndRemove({ _id: req.user })
         res.json({ msg: 'User Deleted' })
 
     } catch (error) {
