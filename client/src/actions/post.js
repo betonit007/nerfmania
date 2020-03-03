@@ -97,8 +97,11 @@ export const deletePost = id => async dispatch => {
 
 // ADD Post
 export const addPost = formData => async dispatch => {
+
+  console.log(formData)
     try {
         
+        console.log(formData)
         const res = await axios.post(`/api/posts`, formData);
 
         dispatch({

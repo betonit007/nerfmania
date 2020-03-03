@@ -8,7 +8,7 @@ const Profile = require('../../models/Profile')
 const User = require('../../models/User')
 
 
-//Get Route for posts
+//add post
 router.post('/', [auth, [
   check('text', 'Text is required')
     .not()
@@ -27,7 +27,7 @@ router.post('/', [auth, [
       text: req.body.text,
       name: user.name,
       avatar: user.avatar,
-      user: req.user.id
+      user: req.user
     })
 
     const post = await newPost.save();
@@ -86,7 +86,7 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(404).json({ msg: 'Post not found' })
     }
 
-    if (post.user.toString() !== req.user.id) {
+    if (post.user.toString() !== req.user) {
       return res.status(401).json({ msg: 'User not authorized' })
     }
     await post.remove();
@@ -138,7 +138,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
       return res.status(400).json({ msg: 'Post has not yet been liked' })
     }
 
-    const removeIndex = post.likes.map(like => like.user.toString().indexOf(req.user.id)) //get the index of the like so we can reomve it
+    const removeIndex = post.likes.map(like => like.user.toString().indexOf(req.user)) //get the index of the like so we can reomve it
 
     post.likes.splice(removeIndex, 1)
 
@@ -161,14 +161,14 @@ router.post('/comment/:id', [auth, [check('text', 'Text is required').not().isEm
 
   try {
 
-    const user = await User.findById(req.user.id).select('-password')
+    const user = await User.findById(req.user).select('-password')
     const post = await Post.findById(req.params.id);
 
     const newComment = {
       text: req.body.text,
       name: user.name,
       avatar: user.avatar,
-      user: req.user.id
+      user: req.user
     }
 
     post.comments.unshift(newComment);
@@ -198,14 +198,14 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     }
 
     //make sure the person logged in matches the user who made the comment
-    if (comment.user.toString() !== req.user.id) {
+    if (comment.user.toString() !== req.user) {
       return res.status(401).json({ msg: 'User not authorized ' })
     }
 
     //Get index of comment to remove
     const removeIndex = post.comments
       .map(comment => comment.user.toString())
-      .indexOf(req.user.id)
+      .indexOf(req.user)
 
     post.comments.splice(removeIndex, 1);
 

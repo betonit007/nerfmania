@@ -35,4 +35,8 @@ PostForm.propTypes = {
     addPost: PropTypes.func.isRequired,
 }
 
+const mapStateToProps = state => ({
+    auth: state.auth
+})
+
 export default connect(null, { addPost })(PostForm)
