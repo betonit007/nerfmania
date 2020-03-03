@@ -58,7 +58,7 @@ router.get('/', auth, async (req, res) => {
 //get post by id
 router.get('/:id', auth, async (req, res) => {
   try {
-
+    console.log('hit')
     const post = await Post.findById(req.params.id)
 
     if (!post) {
