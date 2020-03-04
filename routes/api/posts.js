@@ -58,7 +58,7 @@ router.get('/', auth, async (req, res) => {
 //get post by id
 router.get('/:id', auth, async (req, res) => {
   try {
-    console.log('hit')
+    
     const post = await Post.findById(req.params.id)
 
     if (!post) {
@@ -204,8 +204,8 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
 
     //Get index of comment to remove
     const removeIndex = post.comments
-      .map(comment => comment.user.toString())
-      .indexOf(req.user)
+      .map(comment => comment._id.toString())
+      .indexOf(req.params.comment_id)
 
     post.comments.splice(removeIndex, 1);
 

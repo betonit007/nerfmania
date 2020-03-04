@@ -39,4 +39,4 @@ const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(null, { addPost })(PostForm)
+export default connect(mapStateToProps, { addPost })(PostForm)

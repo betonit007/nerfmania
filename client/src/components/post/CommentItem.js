@@ -6,7 +6,7 @@ import Moment from 'react-moment'
 import { deleteComment } from '../../actions/post'
 
 
-const CommentItem = ({ auth, postId, comment: { _id, text, name, avatar, user, date } }) => {
+const CommentItem = ({ deleteComment, auth, postId, comment: { _id, text, name, avatar, user, date } }) => {
     
     return (
         <div className="post by-white p-1 my-1">
@@ -36,13 +36,14 @@ const CommentItem = ({ auth, postId, comment: { _id, text, name, avatar, user, d
 }
 
 CommentItem.propTypes = {
-    postId: PropTypes.number.isRequired,
+    postId: PropTypes.string.isRequired,
     comment: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    deleteComment: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
     auth: state.auth
 })
 
-export default connect(mapStateToProps, {})(CommentItem)
+export default connect(mapStateToProps, { deleteComment })(CommentItem)
