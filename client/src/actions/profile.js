@@ -58,9 +58,10 @@ export const getProfiles = () => async dispatch => {
     })
 
   } catch (err) {
+    console.log(err.response)
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
+      payload: { msg: err.response, status: err.response }
     })
   }
 }
@@ -96,7 +97,7 @@ export const createProfile = (formData, history, edit = false) => async dispatch
     }
 
     const res = await axios.post('/api/profile', formData, config);
-
+    console.log('create or update', res.data)
     dispatch({
       type: GET_PROFILE,
       payload: res.data

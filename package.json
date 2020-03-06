@@ -4,8 +4,8 @@
   "description": "Social App for comparing and rating nerf guns",
   "main": "index.js",
   "scripts": {
-    "start": "node server",
-    "server": "nodemon server",
+    "start": "node server.js",
+    "server": "node server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

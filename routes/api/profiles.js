@@ -38,6 +38,7 @@ router.post('/', auth, async (req, res) => {
 
     const profileFields = {};
 
+    console.log(req.user)
     profileFields.user = req.user
     if (company) profileFields.company = company
     if (website) profileFields.website = website
@@ -59,24 +60,25 @@ router.post('/', auth, async (req, res) => {
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
 
-
+   
     try {
 
         let profile = await Profile.findOne({ user: req.user })
-
         if (profile) { // if profile found, update it.
-            profile = await Profile.findByIdAndUpdate(
-                req.user,
+            console.log('inside if', profile)
+            profile = await Profile.findOneAndUpdate(
+                { user: req.user },
                 { $set: profileFields },
                 { new: true }
             )
+            console.log('before res.json', profile)
             return res.json(profile)
         }
 
         //if not found, create a new one
         profile = new Profile(profileFields);
 
-        await profile.save();
+        const otherres = await profile.save();
         res.json(profile);
 
 

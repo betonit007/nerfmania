@@ -17,7 +17,7 @@ const Landing = ({ isAuthenticated }) => {
                 <div className="landing-inner">
                     <h1 className="x-large">In3d</h1>
                     <p className="lead">
-                        Share, Create and Meet Other 3d Modelers
+                        Share, Create and Meet Other 3d Modelers!
           </p>
                     <div className="buttons">
                         <Link to="/register" className="btn btn-primary">Sign Up</Link>
