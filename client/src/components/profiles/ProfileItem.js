@@ -10,7 +10,7 @@ const ProfileItem = ({ profile: { user: { _id, name, avatar }, status, company, 
 
                 <h2>{name}</h2>
                 <p>{status && status} {company && <span> {company} </span>} </p>
-                <div className="my-1">{location && <span>location</span>}</div>
+                <div className="my-1">{location && <span>{location}</span>}</div>
                 <Link to={`/profile/${_id}`} className='btn btn-primary'>
                     View Profile
                 </Link>

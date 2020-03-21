@@ -71,7 +71,7 @@ export const getRepos = username => async dispatch => {
 
   try {
 
-    const res = await axios.get(`/api/profile/thingiverser/${username}`)
+    const res = await axios.get(`/api/profile/thingiverse/${username}`)
 
     dispatch({
       type: GET_REPOS,
@@ -97,7 +97,7 @@ export const createProfile = (formData, history, edit = false) => async dispatch
     }
 
     const res = await axios.post('/api/profile', formData, config);
-    console.log('create or update', res.data)
+   
     dispatch({
       type: GET_PROFILE,
       payload: res.data

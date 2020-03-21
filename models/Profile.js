@@ -20,6 +20,9 @@ const ProfileSchema = new mongoose.Schema({
     status: {
         type: String
     },
+    avatar: {
+        type: String
+    },
     skills: {
         type: [String] //an array of Strings
     },

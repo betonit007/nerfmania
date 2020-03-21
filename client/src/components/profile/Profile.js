@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import ProfileTop from './ProfileTop'
 import ProfileAbout from './ProfileAbout'
 import ProfileCertifications from './ProfileCertifications'
-import ProfileGithub from './ProfileGithub'
+import ProfileThingiverse from './ProfileThingiverse'
 import ProfileExperience from './ProfileExperience'
 import { connect } from 'react-redux'
 import Spinner from '../layout/Spinner'
@@ -63,8 +63,8 @@ const Profile = ({ getProfileById, profile: { profile, loading }, auth, match })
                 (<h4>No experience credentials</h4>)
               }
             </div>
-            {profile.githubusername && (
-              <ProfileGithub username={profile.githubusername} />
+            {profile.thingiverse && (
+              <ProfileThingiverse username={profile.thingiverse} />
             )}
 
           </div>

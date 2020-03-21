@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const ProfileTop = ({ profile: { status, company, location, website, social, user: { name, avatar } } }) => {
+const ProfileTop = ({ profile: { status, company, avatar, location, website, social, user: { name } } }) => {
     console.log(avatar)
     return (
         <div className="profile-top bg-primary p-2">

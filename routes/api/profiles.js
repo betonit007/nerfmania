@@ -13,7 +13,7 @@ const Post = require('../../models/Post')
 
 //Get public router to get all profiles
 router.get('/me', auth, async (req, res) => {
- 
+
     try {
 
         const profile = await Profile.findOne({ user: req.user }).populate('user', ['name', 'date']) // the second proptery to populate is an array of the things we want to bring from user
@@ -38,8 +38,7 @@ router.post('/', auth, async (req, res) => {
 
     const profileFields = {};
 
-    console.log(req.user)
-    profileFields.user = req.user
+    profileFields.user = req.user || req.user._id
     if (company) profileFields.company = company
     if (website) profileFields.website = website
     if (location) profileFields.location = location
@@ -60,12 +59,11 @@ router.post('/', auth, async (req, res) => {
     if (linkedin) profileFields.social.linkedin = linkedin
     if (instagram) profileFields.social.instagram = instagram
 
-   
+
     try {
 
         let profile = await Profile.findOne({ user: req.user })
         if (profile) { // if profile found, update it.
-            console.log('inside if', profile)
             profile = await Profile.findOneAndUpdate(
                 { user: req.user },
                 { $set: profileFields },
@@ -75,12 +73,24 @@ router.post('/', auth, async (req, res) => {
             return res.json(profile)
         }
 
-        //if not found, create a new one
+        // if not found, create a new one
+
+        const headersConfig = {
+            headers: {
+                Authorization: config.get('thingiversePassword')
+            }
+        }
+        console.log(thingiverse)
+        const thingiverseRes = await axios.get(`https://api.thingiverse.com/users/${thingiverse}/things/?per_page=5&sort=id`, headersConfig)
+        if (thingiverseRes.data[0]) {
+            profileFields.avatar = thingiverseRes.data[0].creator.thumbnail
+        } else {
+            profileFields.avatar =" https://www.caribbeangamezone.com/wp-content/uploads/2018/03/avatar-placeholder.png"
+        }
         profile = new Profile(profileFields);
 
-        const otherres = await profile.save();
+        await profile.save();
         res.json(profile);
-
 
     } catch (error) {
         console.error(error)
@@ -203,7 +213,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 router.put('/education', auth, async (req, res) => {
 
     const { school, degree, fieldofstudy, from, to, current, description } = req.body;
-    
+
     const newExp = {
         school,
         degree,
@@ -263,31 +273,32 @@ router.delete('/education/:exp_id', auth, async (req, res) => {
 })
 
 router.get('/thingiverse/:username', async (req, res) => {
+    console.log('thingiverse hit')
     try {
 
         const headersConfig = {
             headers: {
                 Authorization: config.get('thingiversePassword')
-              }
             }
-            const profile = await axios.get(`https://api.thingiverse.com/users/${req.params.username}/things/?per_page=5&sort=id`, headersConfig)
-            return res.send(profile.data)
         }
-        // const options = {
-        //     uri: `https://api.thingiverse.com/users/${req.params.username}/things/?per_page=5&sort=id`,
-        //     method: 'GET',
-        //     headers: { 'Authorization': `${config.get('thingiversePassword')}` }
-        // }
-        // console.log(options);
-        // request(options, (error, response, body) => {
-        //     if (error) console.error(error);
+        const profile = await axios.get(`https://api.thingiverse.com/users/${req.params.username}/things/?per_page=5&sort=id`, headersConfig)
+        return res.send(profile.data)
+    }
+    // const options = {
+    //     uri: `https://api.thingiverse.com/users/${req.params.username}/things/?per_page=5&sort=id`,
+    //     method: 'GET',
+    //     headers: { 'Authorization': `${config.get('thingiversePassword')}` }
+    // }
+    // console.log(options);
+    // request(options, (error, response, body) => {
+    //     if (error) console.error(error);
 
-        //     if(response.statusCode !== 200) {
-        //         res.status(404).json({msg: 'No Thingiverse Profile found'})
-        //     }
+    //     if(response.statusCode !== 200) {
+    //         res.status(404).json({msg: 'No Thingiverse Profile found'})
+    //     }
 
-        //     res.json(JSON.parse(body))
-        // })
+    //     res.json(JSON.parse(body))
+    // })
     //} 
 
     catch (err) {
