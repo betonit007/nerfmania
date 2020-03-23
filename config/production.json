@@ -1,8 +1,0 @@
-{
-    "mongoURI": "mongodb+srv://betonit007:Nyjets41@cluster0-buuqx.gcp.mongodb.net/In3d?retryWrites=true&w=majority",
-    "jwtSecret": "mySecretPasswordForJWT",
-    "email": "tmnagorski@gmail.com",
-    "emailPassword": "Nyjets$41",
-    "thingiversePassword": "Bearer 9bb08a75d835d7bb19ff60701c5d854c"
-
-}
