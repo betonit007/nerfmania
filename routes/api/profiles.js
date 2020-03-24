@@ -1,7 +1,6 @@
 const express = require('express')
 const request = require('request')
 const axios = require('axios')
-const config = require('config')
 const router = express.Router()
 const auth = require('../../middleware/auth')
 //const { check, validationResult } = require('express-validator') //Changed to not requiring all profile fields
@@ -77,7 +76,7 @@ router.post('/', auth, async (req, res) => {
 
         const headersConfig = {
             headers: {
-                Authorization: config.get('thingiversePassword')
+                Authorization: process.env.THINGIVERSE
             }
         }
         console.log(thingiverse)
@@ -278,7 +277,7 @@ router.get('/thingiverse/:username', async (req, res) => {
 
         const headersConfig = {
             headers: {
-                Authorization: config.get('thingiversePassword')
+                Authorization: process.env.THINGIVERSE
             }
         }
         const profile = await axios.get(`https://api.thingiverse.com/users/${req.params.username}/things/?per_page=5&sort=id`, headersConfig)

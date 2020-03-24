@@ -1,7 +1,4 @@
 const nodemailer = require('nodemailer');
-const config = require('config')
-const myEmail = config.get('email');
-const myPassword = config.get('emailPassword');
 
 const sendPasswordResetLink = ({ sendToEmail, token, id }) => {
    
